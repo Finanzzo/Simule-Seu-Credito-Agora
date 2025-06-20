@@ -38,8 +38,7 @@
       font-weight: bold;
     }
     input[type="text"],
-    input[type="tel"],
-    input[type="email"] {
+    select {
       width: 100%;
       padding: 10px;
       margin-top: 5px;
@@ -88,26 +87,28 @@
 
   <div class="container">
     <h1>Solicite sua Simulação</h1>
-    <p>Preencha seus dados para receber sua proposta de crédito consignado com as melhores condições!</p>
+    <p>Preencha seus dados e fale direto no WhatsApp para receber sua proposta de crédito com as melhores condições!</p>
 
-    <form action="https://formsubmit.co/finanzzo@finanzzosolucoes.com.br" method="POST" onsubmit="enviarWhatsapp()">
-      <input type="hidden" name="_captcha" value="false">
+    <label for="nome">Nome Completo:</label>
+    <input type="text" id="nome" placeholder="Ex: Maria da Silva" required>
 
-      <label for="nome">Nome Completo:</label>
-      <input type="text" id="nome" name="nome" placeholder="Ex: Maria da Silva" required>
+    <label for="tipo">Você é:</label>
+    <select id="tipo" required>
+      <option value="">Selecione uma opção</option>
+      <option value="Aposentado(a)">Aposentado(a)</option>
+      <option value="Pensionista">Pensionista</option>
+      <option value="BPC/LOAS">BPC/LOAS</option>
+      <option value="BPC/LOAS">Antecipação de FGTS</option>
+    </select>
 
-      <label for="telefone">WhatsApp:</label>
-      <input type="tel" id="telefone" name="telefone" placeholder="(XX) XXXXX-XXXX" required>
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" id="consentimento" required>
+        Autorizo a Finanzzo Soluções Financeiras a entrar em contato via WhatsApp e telefone para envio de informações e propostas sobre crédito consignado. (LGPD)
+      </label>
+    </div>
 
-      <div class="checkbox">
-        <label>
-          <input type="checkbox" name="consentimento" required>
-          Autorizo a Finanzzo Soluções Financeiras a entrar em contato via WhatsApp e telefone para envio de informações e propostas sobre crédito consignado. (LGPD)
-        </label>
-      </div>
-
-      <button type="submit">Quero minha Simulação</button>
-    </form>
+    <button onclick="enviarWhatsapp()">Quero minha Simulação</button>
 
     <p class="lgpd-text">
       Seus dados estão protegidos conforme a <a href="privacidade.html" target="_blank">Política de Privacidade</a>.
@@ -121,16 +122,25 @@
 <script>
   function enviarWhatsapp() {
     const nome = document.getElementById('nome').value.trim();
-    const telefone = document.getElementById('telefone').value.trim();
+    const tipo = document.getElementById('tipo').value;
+    const consentimento = document.getElementById('consentimento').checked;
 
-    const mensagem = `Olá, me chamo ${nome} e acabei de solicitar uma simulação pelo site. Meu número é ${telefone}. Gostaria de mais informações.`;
+    if (nome === '' || tipo === '') {
+      alert('Por favor, preencha seu nome e selecione uma opção.');
+      return;
+    }
+
+    if (!consentimento) {
+      alert('Você precisa aceitar o termo de consentimento (LGPD).');
+      return;
+    }
+
+    const mensagem = `Olá, me chamo ${nome} e sou ${tipo}. Gostaria de solicitar uma simulação de crédito. Acabei de preencher o site da Finanzzo.`;
 
     const numeroWhatsapp = '5537984097037';
     const link = `https://wa.me/${numeroWhatsapp}?text=${encodeURIComponent(mensagem)}`;
 
-    setTimeout(() => {
-      window.open(link, '_blank');
-    }, 500); // Aguarda meio segundo após enviar
+    window.open(link, '_blank');
   }
 </script>
 
